@@ -63,6 +63,7 @@ class BlackOilBrineModule;
 template <class TypeTag>
 class BlackOilPrimaryVariables : public FvBasePrimaryVariables<TypeTag>
 {
+protected:
     using ParentType = FvBasePrimaryVariables<TypeTag>;
     using Implementation = GetPropType<TypeTag, Properties::PrimaryVariables>;
 
@@ -268,7 +269,7 @@ public:
         bool onlyWater = FluidSystem::phaseIsActive(waterPhaseIdx)?(fluidState.saturation(waterPhaseIdx) > thresholdWaterFilledCell):false;
 
         // deal with the primary variables for the energy extension
-        EnergyModule::assignPrimaryVars(*this, fluidState);
+        EnergyModule::assignPrimaryVars(asImp_(), fluidState);
 
         // determine the meaning of the primary variables
         if (FluidSystem::numActivePhases() == 1) {
@@ -671,7 +672,7 @@ public:
 #endif // NDEBUG
     }
 
-private:
+protected:
     Implementation& asImp_()
     { return *static_cast<Implementation*>(this); }
 
